@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tourism Search Engine | محرك البحث السياحي</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #2c5e8a;
+        --secondary-color: #4a8bc7;
+        --accent-color: #f0c14b;
+        --text-color: #333;
+        --light-text: #777;
+        --bg-color: #f9f9f9;
+        --card-bg: #ffffff;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --highlight-color: #fff3cd;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", "Tahoma", "Geneva", "Verdana", sans-serif;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        padding: 30px 0;
+        border-radius: 0 0 20px 20px;
+        box-shadow: var(--shadow);
+        margin-bottom: 40px;
+        text-align: center;
+      }
+
+      .header-content {
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 20px;
+      }
+
+      .search-container {
+        display: flex;
+        max-width: 700px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .search-input {
+        flex: 1;
+        padding: 15px 25px;
+        font-size: 1.1rem;
+        border: none;
+        outline: none;
+      }
+
+      .search-btn {
+        padding: 0 25px;
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+      }
+
+      .search-btn:hover {
+        background-color: #ddb347;
+      }
+
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 25px 0;
+        flex-wrap: wrap;
+      }
+
+      .method-selector {
+        padding: 12px 20px;
+        border-radius: 50px;
+        border: 2px solid var(--secondary-color);
+        background-color: white;
+        color: var(--primary-color);
+        font-weight: 600;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+
+      .method-selector:hover {
+        background-color: var(--secondary-color);
+        color: white;
+      }
+
+      .results-container {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 20px;
+      }
+
+      .tourism-card {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: var(--shadow);
+        transition: transform 0.3s ease;
+        border-right: 5px solid var(--accent-color);
+      }
+
+      .tourism-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .tourism-title {
+        color: var(--primary-color);
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .tourism-title i {
+        color: var(--accent-color);
+      }
+
+      .tourism-content {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        line-height: 1.8;
+      }
+
+      .tourism-meta {
+        display: flex;
+        gap: 15px;
+        color: var(--light-text);
+        font-size: 0.9rem;
+        flex-wrap: wrap;
+      }
+
+      .tourism-meta span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .tourism-meta i {
+        font-size: 0.8rem;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 40px;
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        grid-column: 1 / -1;
+      }
+
+      .no-results i {
+        font-size: 3rem;
+        color: var(--light-text);
+        margin-bottom: 20px;
+      }
+
+      .no-results h3 {
+        color: var(--primary-color);
+        margin-bottom: 10px;
+      }
+
+      .no-results p {
+        color: var(--light-text);
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 50px;
+        padding: 20px;
+        color: var(--light-text);
+        font-size: 0.9rem;
+      }
+
+      /* بطاقة الوجهة السياحية */
+      .destination-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        background-color: #eee;
+      }
+
+      .rating {
+        color: #f8d64e;
+        margin: 5px 0;
+      }
+
+      /* نمط RTL و LTR */
+      body[dir="rtl"] {
+        text-align: right;
+      }
+
+      body[dir="ltr"] {
+        text-align: left;
+      }
+
+      body[dir="ltr"] .tourism-card {
+        border-right: none;
+        border-left: 5px solid var(--accent-color);
+      }
+
+      /* تمييز النص */
+      .highlight {
+        background-color: var(--highlight-color);
+        font-weight: bold;
+        padding: 0 2px;
+        border-radius: 3px;
+      }
+
+      /* زر تبديل اللغة */
+      .language-switcher {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 8px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .language-switcher:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2rem;
+        }
+
+        .search-container {
+          flex-direction: column;
+          border-radius: 15px;
+        }
+
+        .search-input {
+          padding: 15px;
+        }
+
+        .search-btn {
+          padding: 15px;
+          border-radius: 0 0 15px 15px;
+        }
+
+        .controls {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .method-selector {
+          width: 100%;
+          max-width: 300px;
+        }
+
+        .results-container {
+          grid-template-columns: 1fr;
+        }
+
+        .language-switcher {
+          position: static;
+          margin-bottom: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <div class="language-switcher" id="languageSwitcher">
+          <i class="fas fa-language"></i> English
+        </div>
+        <h1 id="appTitle">
+          <i class="fas fa-umbrella-beach"></i>
+          <span id="titleText">محرك البحث السياحي</span>
+        </h1>
+        <p class="subtitle" id="appSubtitle">
+          اكتشف أفضل الوجهات السياحية حول العالم
+        </p>
+
+        <div class="search-container">
+          <input
+            type="text"
+            class="search-input"
+            id="searchInput"
+            placeholder="ابحث عن وجهة سياحية..."
+          />
+          <button class="search-btn" id="searchBtn">
+            <i class="fas fa-search"></i> <span id="searchText">بحث</span>
+          </button>
+        </div>
+
+        <div class="controls">
+          <select class="method-selector" id="methodSelector">
+            <option value="incidence">مصفوفة حدوث المصطلحات</option>
+            <option value="inverted">الفهرس المقلوب</option>
+            <option value="tfidf">TF-IDF مع تشابه جيب التمام</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="results-container" id="results">
+        <!-- نتائج البحث ستظهر هنا -->
+      </div>
+    </div>
+
+    <footer>
+      <p id="footerText">
+        جميع الحقوق محفوظة &copy; <span id="currentYear">2023</span> محرك البحث
+        السياحي
+      </p>
+    </footer>
+
+    <script>
+      // بيانات الترجمة
+      const translations = {
+        en: {
+          title: "Tourism Search Engine",
+          subtitle: "Discover the best tourist destinations around the world",
+          searchPlaceholder: "Search for a tourist destination...",
+          searchButton: "Search",
+          noResultsTitle: "No results found",
+          noResultsMessage: "Try using different search terms",
+          copyright: "All rights reserved &copy; ",
+          language: "العربية",
+          methods: {
+            incidence: "Term Incidence Matrix",
+            inverted: "Inverted Index",
+            tfidf: "TF-IDF with Cosine Similarity",
+          },
+        },
+        ar: {
+          title: "محرك البحث السياحي",
+          subtitle: "اكتشف أفضل الوجهات السياحية حول العالم",
+          searchPlaceholder: "ابحث عن وجهة سياحية...",
+          searchButton: "بحث",
+          noResultsTitle: "لا توجد نتائج للبحث",
+          noResultsMessage: "حاول استخدام كلمات بحث مختلفة",
+          copyright: "جميع الحقوق محفوظة &copy; ",
+          language: "English",
+          methods: {
+            incidence: "مصفوفة حدوث المصطلحات",
+            inverted: "الفهرس المقلوب",
+            tfidf: "TF-IDF مع تشابه جيب التمام",
+          },
+        },
+      };
+
+      // بيانات الوجهات السياحية مع روابط صور مؤكدة
+      const destinations = [
+        {
+          id: 1,
+          name: "أهرامات الجيزة",
+          name_en: "Giza Pyramids",
+          description:
+            "من عجائب الدنيا السبع القديمة وتعتبر من أهم المعالم السياحية في مصر والعالم. تقع على هضبة الجيزة على الضفة الغربية لنهر النيل.",
+          description_en:
+            "One of the Seven Wonders of the Ancient World and among the most important tourist attractions in Egypt and the world. Located on the Giza Plateau on the west bank of the Nile River.",
+          country: "مصر",
+          country_en: "Egypt",
+          city: "الجيزة",
+          city_en: "Giza",
+          rating: 5,
+          attractions: "أبو الهول, أهرامات خوفو وخفرع ومنقرع, مراكب الشمس",
+          attractions_en:
+            "The Sphinx, Pyramids of Khufu, Khafre and Menkaure, Solar Boats",
+          bestSeason: "الشتاء",
+          bestSeason_en: "Winter",
+          category: "معلم تاريخي",
+          category_en: "Historical Landmark",
+          priceLevel: "$$",
+          imageUrl:
+            "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+          details: {
+            weather: "معتدل في الشتاء، حار في الصيف",
+            weather_en: "Mild in winter, hot in summer",
+            activities:
+              "جولات بالقرب من الأهرامات، ركوب الجمال، عروض الصوت والضوء",
+            activities_en:
+              "Tours near the pyramids, camel rides, sound and light shows",
+            hotels: "فندق مينا هاوس، فندق المريديان الأهرام",
+            hotels_en: "Mena House Hotel, Le Méridien Pyramids",
+            restaurants: "مطعم خوفو، مطعم الأهرام",
+            restaurants_en: "Khufu Restaurant, Pyramids Restaurant",
+            transport: "سيارات الأجرة، الحافلات السياحية",
+            transport_en: "Taxis, tourist buses",
+          },
+        },
+        {
+          id: 2,
+          name: "برج إيفل",
+          name_en: "Eiffel Tower",
+          description:
+            "برج حديدي يبلغ ارتفاعه 324 مترًا، يعد أحد أكثر المعالم زيارة في العالم. تم بناؤه عام 1889 ويوفر إطلالات رائعة على باريس.",
+          description_en:
+            "A 324-meter tall iron tower, one of the most visited landmarks in the world. Built in 1889, it offers stunning views of Paris.",
+          country: "فرنسا",
+          country_en: "France",
+          city: "باريس",
+          city_en: "Paris",
+          rating: 4,
+          attractions: "مناظر بانورامية, مطعم, متحف",
+          attractions_en: "Panoramic views, restaurant, museum",
+          bestSeason: "الربيع",
+          bestSeason_en: "Spring",
+          category: "معلم ثقافي",
+          category_en: "Cultural Landmark",
+          priceLevel: "$$$",
+          imageUrl:
+            "https://images.unsplash.com/photo-1431274172761-fca41d930114?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+          details: {
+            weather: "معتدل في الربيع والخريف، بارد في الشتاء",
+            weather_en: "Mild in spring and autumn, cold in winter",
+            activities:
+              "زيارة الطوابق العليا، تناول العشاء في المطعم، مشاهدة الأضواء الليلية",
+            activities_en:
+              "Visit upper floors, dine at the restaurant, see nighttime lights",
+            hotels: "فندق بلازا أثيني، فندق رافلز باريس",
+            hotels_en: "Hôtel Plaza Athénée, Raffles Paris",
+            restaurants: "مطعم 58 Tour Eiffel، مطعم Jules Verne",
+            restaurants_en: "58 Tour Eiffel Restaurant, Jules Verne Restaurant",
+            transport: "مترو باريس، الحافلات، سيارات الأجرة",
+            transport_en: "Paris Metro, buses, taxis",
+          },
+        },
+        {
+          id: 3,
+          name: "شلالات نياجارا",
+          name_en: "Niagara Falls",
+          description:
+            "مجموعة من الشلالات الضخمة على الحدود بين كندا والولايات المتحدة. تشتهر بجمالها الطبيعي وقوتها المائية.",
+          description_en:
+            "A group of massive waterfalls on the border between Canada and the United States. Famous for their natural beauty and water power.",
+          country: "كندا/الولايات المتحدة",
+          country_en: "Canada/USA",
+          city: "نياجارا",
+          city_en: "Niagara",
+          rating: 4,
+          attractions: "رحلات القوارب, جسر قوس قزح, حدائق الزهور",
+          attractions_en: "Boat tours, Rainbow Bridge, flower gardens",
+          bestSeason: "الصيف",
+          bestSeason_en: "Summer",
+          category: "ظاهرة طبيعية",
+          category_en: "Natural Wonder",
+          priceLevel: "$$",
+          imageUrl:
+            "https://i.pinimg.com/736x/66/47/a8/6647a8a33173c5c5978a2ed9e1f8f1c1.jpg",
+          details: {
+            weather: "دافئ في الصيف، بارد في الشتاء مع تجمد أجزاء من الشلالات",
+            weather_en:
+              "Warm in summer, cold in winter with parts of the falls freezing",
+            activities:
+              "رحلات قارب Maid of the Mist، زيارة الكهوف خلف الشلالات، مشاهدة الألعاب النارية",
+            activities_en:
+              "Maid of the Mist boat tours, visiting caves behind the falls, fireworks viewing",
+            hotels: "فندق Sheraton على الشلالات، فندق Marriott Fallsview",
+            hotels_en: "Sheraton on the Falls, Marriott Fallsview",
+            restaurants: "مطعم Elements، مطعم The Keg",
+            restaurants_en: "Elements Restaurant, The Keg",
+            transport: "سكك حديدية، حافلات، سيارات تأجير",
+            transport_en: "Railways, buses, rental cars",
+          },
+        },
+        {
+          id: 4,
+          name: "سور الصين العظيم",
+          name_en: "Great Wall of China",
+          description:
+            "أعظم إنجاز هندسي في التاريخ الصيني، يمتد لأكثر من 21,000 كيلومتر. بني لحماية الحدود الشمالية للإمبراطورية الصينية.",
+          description_en:
+            "The greatest engineering achievement in Chinese history, stretching over 21,000 km. Built to protect the northern borders of the Chinese Empire.",
+          country: "الصين",
+          country_en: "China",
+          city: "بكين",
+          city_en: "Beijing",
+          rating: 5,
+          attractions: "أبراج المراقبة, المتحف, المناظر الطبيعية",
+          attractions_en: "Watchtowers, museum, scenic views",
+          bestSeason: "الربيع والخريف",
+          bestSeason_en: "Spring and Autumn",
+          category: "معلم تاريخي",
+          category_en: "Historical Landmark",
+          priceLevel: "$$",
+          imageUrl:
+            "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+          details: {
+            weather:
+              "معتدل في الربيع والخريف، حار ورطب في الصيف، بارد في الشتاء",
+            weather_en:
+              "Mild in spring and autumn, hot and humid in summer, cold in winter",
+            activities:
+              "المشي على أجزاء مختلفة من السور، زيارة متحف السور، ركوب التلفريك",
+            activities_en:
+              "Hiking different sections of the wall, visiting the wall museum, taking the cable car",
+            hotels: "فندق Commune by the Great Wall، فندق Brickyard Retreat",
+            hotels_en: "Commune by the Great Wall, Brickyard Retreat",
+            restaurants: "مطعم Schoolhouse، مطعم The Orchard",
+            restaurants_en: "Schoolhouse Restaurant, The Orchard",
+            transport: "الحافلات السياحية، سيارات الأجرة، القطارات",
+            transport_en: "Tour buses, taxis, trains",
+          },
+        },
+        {
+          id: 5,
+          name: "متحف اللوفر",
+          name_en: "Louvre Museum",
+          description:
+            "أكبر متحف فني في العالم وأحد المعالم التاريخية في باريس. يضم أكثر من 38000 قطعة فنية بما في ذلك الموناليزا.",
+          description_en:
+            "The world's largest art museum and a historic monument in Paris. Houses over 38,000 artworks including the Mona Lisa.",
+          country: "فرنسا",
+          country_en: "France",
+          city: "باريس",
+          city_en: "Paris",
+          rating: 5,
+          attractions: "لوحة الموناليزا, فينوس دي ميلو, الأهرام الزجاجية",
+          attractions_en: "Mona Lisa, Venus de Milo, Glass Pyramid",
+          bestSeason: "على مدار العام",
+          bestSeason_en: "Year-round",
+          category: "متحف",
+          category_en: "Museum",
+          priceLevel: "$$",
+          imageUrl:
+            "https://i.pinimg.com/736x/d2/af/ee/d2afeeade58e116658169c7b9d32b727.jpg",
+          details: {
+            weather: "مناسب للزيارة في أي وقت",
+            weather_en: "Suitable to visit any time",
+            activities: "جولات إرشادية، ورش عمل فنية، معارض مؤقتة",
+            activities_en: "Guided tours, art workshops, temporary exhibitions",
+            hotels: "فندق Du Louvre، فندق Regina Louvre",
+            hotels_en: "Hôtel du Louvre, Regina Louvre",
+            restaurants: "مطعم Café Marly، مطعم Le Fumoir",
+            restaurants_en: "Café Marly, Le Fumoir",
+            transport: "مترو باريس، الحافلات، سيارات الأجرة",
+            transport_en: "Paris Metro, buses, taxis",
+          },
+        },
+        {
+          id: 6,
+          name: "برج خليفة",
+          name_en: "Burj Khalifa",
+          description:
+            "أطول برج في العالم يوفر إطلالة بانورامية على مدينة دبي.",
+          description_en:
+            "The tallest tower in the world offering a panoramic view of Dubai.",
+          country: "الإمارات",
+          country_en: "UAE",
+          city: "دبي",
+          city_en: "Dubai",
+          rating: 5,
+          attractions: "منصة المشاهدة، نافورة دبي، دبي مول",
+          attractions_en: "Observation deck, Dubai Fountain, Dubai Mall",
+          bestSeason: "الشتاء",
+          bestSeason_en: "Winter",
+          category: "معلم حديث",
+          category_en: "Modern Landmark",
+          priceLevel: "$$$",
+          imageUrl:
+            "https://i.pinimg.com/736x/b0/28/13/b0281389bd76f05b46a0211ebf8080d3.jpg",
+          details: {
+            weather: "حار صيفًا، معتدل شتاءً",
+            weather_en: "Hot in summer, mild in winter",
+            activities:
+              "زيارة الطابق 124، العشاء في At.mosphere، مشاهدة النافورة الراقصة",
+            activities_en:
+              "Visit the 124th floor, dine at At.mosphere, watch the dancing fountain",
+            hotels: "فندق أرماني دبي، فندق العنوان داون تاون",
+            hotels_en: "Armani Hotel Dubai, Address Downtown",
+            restaurants: "مطعم Armani Amal، مطعم At.mosphere",
+            restaurants_en: "Armani Amal, At.mosphere",
+            transport: "المترو، التاكسي، خدمات النقل الذكية",
+            transport_en: "Metro, taxi, smart transport services",
+          },
+        },
+        {
+          id: 7,
+          name: "تمثال الحرية",
+          name_en: "Statue of Liberty",
+          description:
+            "أحد رموز الحرية في العالم، يقع على جزيرة ليبرتي ويعد من أشهر معالم نيويورك.",
+          description_en:
+            "A global symbol of freedom, located on Liberty Island and one of New York's most iconic landmarks.",
+          country: "الولايات المتحدة",
+          country_en: "USA",
+          city: "نيويورك",
+          city_en: "New York",
+          rating: 4,
+          attractions: "متحف التمثال، منصة التاج، جولة بالقارب",
+          attractions_en: "Statue museum, crown platform, boat tour",
+          bestSeason: "الربيع والصيف",
+          bestSeason_en: "Spring and Summer",
+          category: "معلم تاريخي",
+          category_en: "Historical Landmark",
+          priceLevel: "$$",
+          imageUrl:
+            "https://i.pinimg.com/736x/54/39/ab/5439ab3825335c8c808cb6ee202e4322.jpg",
+          details: {
+            weather: "بارد في الشتاء، دافئ في الصيف",
+            weather_en: "Cold in winter, warm in summer",
+            activities: "جولة بالعبّارة، دخول التمثال، زيارة المتحف",
+            activities_en: "Ferry ride, statue entry, museum visit",
+            hotels: "فندق The Wagner، فندق Conrad Downtown",
+            hotels_en: "The Wagner Hotel, Conrad Downtown",
+            restaurants: "مطعم Liberty House، مطعم Battery Gardens",
+            restaurants_en: "Liberty House, Battery Gardens",
+            transport: "العبّارات، مترو نيويورك، الحافلات",
+            transport_en: "Ferries, NYC Subway, buses",
+          },
+        },
+        {
+          id: 8,
+          name: "شاطئ كوباكابانا",
+          name_en: "Copacabana Beach",
+          description:
+            "أشهر شواطئ ريو دي جانيرو، يتميز بأجوائه النابضة بالحياة والرمال الذهبية.",
+          description_en:
+            "The most famous beach in Rio de Janeiro, known for its lively vibe and golden sand.",
+          country: "البرازيل",
+          country_en: "Brazil",
+          city: "ريو دي جانيرو",
+          city_en: "Rio de Janeiro",
+          rating: 4,
+          attractions: "السباحة، الرياضات الشاطئية، الكورنيش",
+          attractions_en: "Swimming, beach sports, boardwalk",
+          bestSeason: "الصيف",
+          bestSeason_en: "Summer",
+          category: "شاطئ",
+          category_en: "Beach",
+          priceLevel: "$",
+          imageUrl:
+            "https://i.pinimg.com/736x/29/25/e0/2925e046b80cd5ce0dd0d2ec460e7340.jpg",
+          details: {
+            weather: "مشمس ودافئ معظم السنة",
+            weather_en: "Sunny and warm most of the year",
+            activities: "السباحة، كرة القدم الشاطئية، التجول في الكورنيش",
+            activities_en: "Swimming, beach soccer, walking the boardwalk",
+            hotels: "فندق Copacabana Palace، فندق Windsor Excelsior",
+            hotels_en: "Copacabana Palace, Windsor Excelsior",
+            restaurants: "مطعم Churrascaria Palace، مطعم La Trattoria",
+            restaurants_en: "Churrascaria Palace, La Trattoria",
+            transport: "الحافلات، سيارات الأجرة، المترو",
+            transport_en: "Buses, taxis, metro",
+          },
+        },
+        {
+          id: 9,
+          name: "أوبرا سيدني",
+          name_en: "Sydney Opera House",
+          description:
+            "أيقونة معمارية تقع في ميناء سيدني وتعد من أهم المعالم الثقافية في أستراليا.",
+          description_en:
+            "An architectural icon located in Sydney Harbour and one of Australia's top cultural landmarks.",
+          country: "أستراليا",
+          country_en: "Australia",
+          city: "سيدني",
+          city_en: "Sydney",
+          rating: 5,
+          attractions: "العروض المسرحية، الجولات السياحية، الواجهة البحرية",
+          attractions_en: "Theatrical shows, guided tours, waterfront",
+          bestSeason: "الربيع والخريف",
+          bestSeason_en: "Spring and Autumn",
+          category: "مركز ثقافي",
+          category_en: "Cultural Center",
+          priceLevel: "$$$",
+          imageUrl:
+            "https://i.pinimg.com/736x/23/f6/50/23f650ce7007aaf82a915c609f4269a5.jpg",
+          details: {
+            weather: "معتدل طوال السنة",
+            weather_en: "Mild all year round",
+            activities:
+              "حضور الحفلات، جولة خلف الكواليس، تناول الطعام بالميناء",
+            activities_en:
+              "Attending shows, backstage tours, dining by the harbor",
+            hotels: "فندق Park Hyatt Sydney، فندق Four Seasons",
+            hotels_en: "Park Hyatt Sydney, Four Seasons",
+            restaurants: "مطعم Bennelong، مطعم Opera Kitchen",
+            restaurants_en: "Bennelong, Opera Kitchen",
+            transport: "العبارات، القطارات، الحافلات",
+            transport_en: "Ferries, trains, buses",
+          },
+        },
+        {
+          id: 10,
+          name: "معبد الكرنك",
+          name_en: "Karnak Temple",
+          description:
+            "من أعظم المعابد في التاريخ الفرعوني، يضم مجموعة هائلة من الأعمدة والتماثيل والنقوش.",
+          description_en:
+            "One of the greatest temples in Pharaonic history, featuring a massive collection of columns, statues, and inscriptions.",
+          country: "مصر",
+          country_en: "Egypt",
+          city: "الأقصر",
+          city_en: "Luxor",
+          rating: 5,
+          attractions: "قاعة الأعمدة، البحيرة المقدسة، عروض الصوت والضوء",
+          attractions_en: "Hypostyle Hall, Sacred Lake, Sound and Light Show",
+          bestSeason: "الشتاء والربيع",
+          bestSeason_en: "Winter and Spring",
+          category: "موقع أثري",
+          category_en: "Archaeological Site",
+          priceLevel: "$",
+          imageUrl:
+            "https://i.pinimg.com/736x/e4/a0/0e/e4a00e4a53a72fc711f2392317bcace5.jpg",
+          details: {
+            weather: "مشمس ودافئ معظم الوقت",
+            weather_en: "Sunny and warm most of the time",
+            activities: "جولة في المعبد، مشاهدة النقوش، التصوير، عروض المساء",
+            activities_en:
+              "Temple tour, viewing hieroglyphs, photography, evening shows",
+            hotels: "فندق سونستا سان جورج، فندق نيل بالاس",
+            hotels_en: "Sonesta St. George, Nile Palace",
+            restaurants: "مطعم Sofra، مطعم El Hussein",
+            restaurants_en: "Sofra Restaurant, El Hussein",
+            transport: "التاكسي، الحنطور، الحافلات",
+            transport_en: "Taxis, horse carriages, buses",
+          },
+        },
+        {
+          id: 11,
+          name: "مكتبة الإسكندرية",
+          name_en: "Bibliotheca Alexandrina",
+          description:
+            "صرح ثقافي عالمي يُعد امتدادًا لمكتبة الإسكندرية القديمة ويحتوي على ملايين الكتب.",
+          description_en:
+            "A global cultural landmark and a modern revival of the ancient Library of Alexandria, housing millions of books.",
+          country: "مصر",
+          country_en: "Egypt",
+          city: "الإسكندرية",
+          city_en: "Alexandria",
+          rating: 4,
+          attractions: "متحف المخطوطات، القبة السماوية، قاعات المعارض",
+          attractions_en: "Manuscript Museum, Planetarium, Exhibition halls",
+          bestSeason: "الربيع والخريف",
+          bestSeason_en: "Spring and Autumn",
+          category: "مركز ثقافي",
+          category_en: "Cultural Center",
+          priceLevel: "$",
+          imageUrl:
+            "https://i.pinimg.com/736x/a2/de/33/a2de3373ad023f0f1b8cb76bd27b0dc5.jpg",
+          details: {
+            weather: "معتدل على مدار السنة",
+            weather_en: "Mild year-round",
+            activities: "زيارة قاعات القراءة، حضور الندوات، استكشاف المعارض",
+            activities_en:
+              "Visit reading halls, attend lectures, explore exhibitions",
+            hotels: "فندق فور سيزونز سان ستيفانو، فندق شيراتون المنتزه",
+            hotels_en: "Four Seasons San Stefano, Sheraton Montazah",
+            restaurants: "مطعم فلوكا، مطعم البوريفاج",
+            restaurants_en: "Fish Market, La Bodega",
+            transport: "ترام الإسكندرية، التاكسي، السيارات الخاصة",
+            transport_en: "Alexandria tram, taxis, private cars",
+          },
+        },
+        {
+          id: 12,
+          name: "محمية رأس محمد",
+          name_en: "Ras Mohammed National Park",
+          description:
+            "محمية طبيعية بحرية تشتهر بالشعاب المرجانية والغوص في البحر الأحمر.",
+          description_en:
+            "A marine nature reserve famous for coral reefs and diving in the Red Sea.",
+          country: "مصر",
+          country_en: "Egypt",
+          city: "شرم الشيخ",
+          city_en: "Sharm El-Sheikh",
+          rating: 5,
+          attractions: "الغوص، السباحة، مراقبة الأسماك الملونة",
+          attractions_en: "Diving, swimming, colorful fish watching",
+          bestSeason: "الخريف والشتاء",
+          bestSeason_en: "Autumn and Winter",
+          category: "محمية طبيعية",
+          category_en: "Nature Reserve",
+          priceLevel: "$$",
+          imageUrl:
+            "https://i.pinimg.com/736x/f5/2e/d2/f52ed29918b8a59aade42b18cc86fc21.jpg",
+          details: {
+            weather: "مشمس معظم السنة",
+            weather_en: "Sunny most of the year",
+            activities: "رحلات بحرية، غوص، تصوير تحت الماء",
+            activities_en: "Boat trips, scuba diving, underwater photography",
+            hotels: "فندق ريكسوس، فندق موفنبيك شرم الشيخ",
+            hotels_en: "Rixos Hotel, Movenpick Sharm El Sheikh",
+            restaurants: "مطعم فيش ماركت، مطعم فارس",
+            restaurants_en: "Fish Market, Fares Restaurant",
+            transport: "الحافلات السياحية، سيارات الأجرة",
+            transport_en: "Tour buses, taxis",
+          },
+        },
+      ];
+
+      // عناصر واجهة المستخدم
+      const searchInput = document.getElementById("searchInput");
+      const searchBtn = document.getElementById("searchBtn");
+      const methodSelector = document.getElementById("methodSelector");
+      const resultsContainer = document.getElementById("results");
+      const languageSwitcher = document.getElementById("languageSwitcher");
+      const titleText = document.getElementById("titleText");
+      const appSubtitle = document.getElementById("appSubtitle");
+      const searchText = document.getElementById("searchText");
+      const footerText = document.getElementById("footerText");
+      const currentYear = document.getElementById("currentYear");
+
+      // حالة التطبيق
+      let currentLanguage = "ar";
+      let currentQuery = "";
+      let currentMethod = "incidence";
+
+      // تعيين السنة الحالية
+      currentYear.textContent = new Date().getFullYear();
+
+      // معالجة مسبقة للنصوص
+      function preprocess(text) {
+        if (!text) return [];
+
+        let tokens = text.toLowerCase().split(/\s+/);
+
+        const punctuationRegex = /[.,،!?؛:()«»ـ-]/g;
+        tokens = tokens.map((token) => token.replace(punctuationRegex, ""));
+
+        const stopWords =
+          currentLanguage === "ar"
+            ? new Set([
+                "في",
+                "من",
+                "على",
+                "إلى",
+                "عن",
+                "أن",
+                "هو",
+                "هي",
+                "ال",
+                "أو",
+                "و",
+                "لا",
+                "ما",
+                "إن",
+              ])
+            : new Set([
+                "the",
+                "and",
+                "of",
+                "to",
+                "in",
+                "a",
+                "is",
+                "it",
+                "that",
+                "for",
+                "on",
+                "with",
+                "as",
+                "at",
+              ]);
+
+        tokens = tokens.filter(
+          (token) => !stopWords.has(token) && token.length > 1
+        );
+
+        const stemmer =
+          currentLanguage === "ar"
+            ? {
+                ون: "",
+                ين: "",
+                ان: "",
+                ات: "ة",
+                ين: "ة",
+                ون: "ة",
+                وا: "ة",
+                ية: "ة",
+                ية: "ة",
+                تان: "ة",
+                تين: "ة",
+              }
+            : {
+                ing: "",
+                ly: "",
+                ed: "",
+                es: "",
+                s: "",
+              };
+
+        tokens = tokens.map((token) => {
+          for (const [suffix, replacement] of Object.entries(stemmer)) {
+            if (token.endsWith(suffix)) {
+              return token.slice(0, -suffix.length) + replacement;
+            }
+          }
+          return token;
+        });
+
+        return tokens;
+      }
+
+      // إنشاء هياكل البيانات للبحث
+      function initializeSearchData() {
+        // مصفوفة حدوث المصطلحات
+        const vocab = new Set();
+        destinations.forEach((doc) => {
+          const text =
+            currentLanguage === "ar"
+              ? doc.name + " " + doc.description + " " + doc.attractions
+              : doc.name_en +
+                " " +
+                doc.description_en +
+                " " +
+                doc.attractions_en;
+          const tokens = preprocess(text);
+          tokens.forEach((token) => vocab.add(token));
+        });
+
+        const vocabulary = Array.from(vocab).sort();
+        const matrix = [];
+
+        destinations.forEach((doc) => {
+          const text =
+            currentLanguage === "ar"
+              ? doc.name + " " + doc.description + " " + doc.attractions
+              : doc.name_en +
+                " " +
+                doc.description_en +
+                " " +
+                doc.attractions_en;
+          const tokens = preprocess(text);
+          const vector = vocabulary.map((term) =>
+            tokens.includes(term) ? 1 : 0
+          );
+          matrix.push(vector);
+        });
+
+        // الفهرس المقلوب
+        const invertedIndex = {};
+        destinations.forEach((doc) => {
+          const text =
+            currentLanguage === "ar"
+              ? doc.name + " " + doc.description + " " + doc.attractions
+              : doc.name_en +
+                " " +
+                doc.description_en +
+                " " +
+                doc.attractions_en;
+          const tokens = preprocess(text);
+          tokens.forEach((token) => {
+            if (!invertedIndex[token]) {
+              invertedIndex[token] = new Set();
+            }
+            invertedIndex[token].add(doc.id);
+          });
+        });
+
+        // حساب TF-IDF
+        const tfMatrix = [];
+        const df = {};
+
+        destinations.forEach((doc) => {
+          const text =
+            currentLanguage === "ar"
+              ? doc.name + " " + doc.description + " " + doc.attractions
+              : doc.name_en +
+                " " +
+                doc.description_en +
+                " " +
+                doc.attractions_en;
+          const tokens = preprocess(text);
+          const tfVector = {};
+          tokens.forEach((token) => {
+            tfVector[token] = (tfVector[token] || 0) + 1;
+          });
+
+          Object.keys(tfVector).forEach((token) => {
+            df[token] = (df[token] || 0) + 1;
+          });
+
+          tfMatrix.push(tfVector);
+        });
+
+        const N = destinations.length;
+        const idf = {};
+        vocabulary.forEach((term) => {
+          idf[term] = Math.log(N / (df[term] || 1));
+        });
+
+        const tfidfMatrix = [];
+        tfMatrix.forEach((tfVector, docIndex) => {
+          const tfidfVector = {};
+          vocabulary.forEach((term) => {
+            const tf = tfVector[term] || 0;
+            tfidfVector[term] = tf * idf[term];
+          });
+          tfidfMatrix.push(tfidfVector);
+        });
+
+        return {
+          vocabulary,
+          matrix,
+          invertedIndex,
+          tfidfMatrix,
+        };
+      }
+
+      let searchData = initializeSearchData();
+
+      // البحث باستخدام مصفوفة حدوث المصطلحات
+      function searchIncidenceMatrix(query) {
+        const queryTerms = preprocess(query);
+        if (queryTerms.length === 0) return destinations;
+
+        const queryVector = searchData.vocabulary.map((term) =>
+          queryTerms.includes(term) ? 1 : 0
+        );
+
+        const results = [];
+        searchData.matrix.forEach((docVector, docIndex) => {
+          const match = queryVector.every(
+            (q, i) => q === 0 || docVector[i] === 1
+          );
+          if (match) {
+            results.push(destinations[docIndex]);
+          }
+        });
+
+        return results;
+      }
+
+      // البحث باستخدام الفهرس المقلوب
+      function searchInvertedIndex(query) {
+        const queryTerms = preprocess(query);
+        if (queryTerms.length === 0) return destinations;
+
+        let docIds = null;
+        queryTerms.forEach((term) => {
+          if (searchData.invertedIndex[term]) {
+            if (docIds === null) {
+              docIds = new Set(searchData.invertedIndex[term]);
+            } else {
+              const termDocIds = searchData.invertedIndex[term];
+              docIds = new Set([...docIds].filter((id) => termDocIds.has(id)));
+            }
+          } else {
+            docIds = new Set();
+          }
+        });
+
+        if (docIds === null) return destinations;
+
+        return Array.from(docIds).map((id) =>
+          destinations.find((doc) => doc.id === id)
+        );
+      }
+
+      // البحث باستخدام TF-IDF
+      function searchTFIDF(query) {
+        const queryTerms = preprocess(query);
+        if (queryTerms.length === 0) return destinations;
+
+        const queryVector = {};
+        queryTerms.forEach((term) => {
+          queryVector[term] = (queryVector[term] || 0) + 1;
+        });
+
+        const results = [];
+        searchData.tfidfMatrix.forEach((docVector, docIndex) => {
+          let dotProduct = 0;
+          let queryNorm = 0;
+          let docNorm = 0;
+
+          searchData.vocabulary.forEach((term, i) => {
+            const queryTF = queryVector[term] || 0;
+            const docTFIDF = docVector[term] || 0;
+
+            dotProduct += queryTF * docTFIDF;
+            queryNorm += queryTF * queryTF;
+            docNorm += docTFIDF * docTFIDF;
+          });
+
+          queryNorm = Math.sqrt(queryNorm);
+          docNorm = Math.sqrt(docNorm);
+
+          let similarity = 0;
+          if (queryNorm > 0 && docNorm > 0) {
+            similarity = dotProduct / (queryNorm * docNorm);
+          }
+
+          if (similarity > 0) {
+            results.push({
+              doc: destinations[docIndex],
+              score: similarity,
+            });
+          }
+        });
+
+        results.sort((a, b) => b.score - a.score);
+        return results.map((item) => item.doc);
+      }
+
+      // عرض النجوم للتقييم
+      function renderRatingStars(rating) {
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+        let stars = "";
+
+        for (let i = 0; i < fullStars; i++) {
+          stars += '<i class="fas fa-star"></i>';
+        }
+
+        if (hasHalfStar) {
+          stars += '<i class="fas fa-star-half-alt"></i>';
+        }
+
+        for (let i = 0; i < 5 - fullStars - (hasHalfStar ? 1 : 0); i++) {
+          stars += '<i class="far fa-star"></i>';
+        }
+
+        return stars;
+      }
+
+      // تمييز مصطلحات البحث في النص
+      function highlightQueryTerms(text, query) {
+        if (!query || !text) return text;
+
+        const terms = preprocess(query);
+        let highlightedText = text;
+
+        terms.forEach((term) => {
+          // نبحث عن المصطلح في النص مع مراعاة التشكيل والحالة
+          const regex = new RegExp(
+            term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+            "gi"
+          );
+          highlightedText = highlightedText.replace(
+            regex,
+            (match) => `<span class="highlight">${match}</span>`
+          );
+        });
+
+        return highlightedText;
+      }
+
+      // عرض نتائج البحث
+      function displayResults(results) {
+        resultsContainer.innerHTML = "";
+
+        if (results.length === 0) {
+          resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search-minus"></i>
+                        <h3>${translations[currentLanguage].noResultsTitle}</h3>
+                        <p>${translations[currentLanguage].noResultsMessage}</p>
+                    </div>
+                `;
+          return;
+        }
+
+        results.forEach((destination) => {
+          const destinationCard = document.createElement("div");
+          destinationCard.className = "tourism-card";
+
+          // اختيار البيانات بناءً على اللغة الحالية
+          const name =
+            currentLanguage === "ar" ? destination.name : destination.name_en;
+          const description =
+            currentLanguage === "ar"
+              ? destination.description
+              : destination.description_en;
+          const country =
+            currentLanguage === "ar"
+              ? destination.country
+              : destination.country_en;
+          const city =
+            currentLanguage === "ar" ? destination.city : destination.city_en;
+          const category =
+            currentLanguage === "ar"
+              ? destination.category
+              : destination.category_en;
+
+          // تمييز الكلمات في العنوان والوصف
+          const highlightedName = highlightQueryTerms(name, currentQuery);
+          const highlightedDesc = highlightQueryTerms(
+            description,
+            currentQuery
+          );
+
+          // إنشاء رابط صورة بديل إذا فشل التحميل
+          const imageUrl =
+            destination.imageUrl ||
+            `https://via.placeholder.com/600x400?text=${encodeURIComponent(
+              name
+            )}`;
+
+          destinationCard.innerHTML = `
+                    <img src="${imageUrl}" alt="${name}" class="destination-image" 
+                         onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400?text=${encodeURIComponent(
+                           name
+                         )}'">
+                    <div class="tourism-title">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ${highlightedName}
+                    </div>
+                    <div class="rating">
+                        ${renderRatingStars(destination.rating)}
+                    </div>
+                    <div class="tourism-content">${highlightedDesc}</div>
+                    <div class="tourism-meta">
+                        <span><i class="fas fa-globe"></i> ${country}, ${city}</span>
+                        <span><i class="fas fa-tag"></i> ${category}</span>
+                        <span><i class="fas fa-wallet"></i> ${
+                          destination.priceLevel
+                        }</span>
+                    </div>
+                `;
+          resultsContainer.appendChild(destinationCard);
+        });
+      }
+
+      // تنفيذ البحث
+      function performSearch() {
+        currentQuery = searchInput.value.trim();
+        currentMethod = methodSelector.value;
+
+        let results = [];
+
+        switch (currentMethod) {
+          case "incidence":
+            results = searchIncidenceMatrix(currentQuery);
+            break;
+          case "inverted":
+            results = searchInvertedIndex(currentQuery);
+            break;
+          case "tfidf":
+            results = searchTFIDF(currentQuery);
+            break;
+        }
+
+        displayResults(results);
+      }
+
+      // تبديل اللغة
+      function switchLanguage() {
+        currentLanguage = currentLanguage === "ar" ? "en" : "ar";
+
+        // تحديث اتجاه الصفحة
+        document.documentElement.dir = currentLanguage === "ar" ? "rtl" : "ltr";
+        document.documentElement.lang = currentLanguage;
+
+        // تحديث واجهة المستخدم
+        titleText.textContent = translations[currentLanguage].title;
+        appSubtitle.textContent = translations[currentLanguage].subtitle;
+        searchInput.placeholder =
+          translations[currentLanguage].searchPlaceholder;
+        searchText.textContent = translations[currentLanguage].searchButton;
+        footerText.innerHTML =
+          translations[currentLanguage].copyright +
+          `<span id="currentYear">${new Date().getFullYear()}</span> ` +
+          translations[currentLanguage].title;
+
+        // تحديث خيارات طريقة البحث
+        methodSelector.innerHTML = `
+                <option value="incidence">${translations[currentLanguage].methods.incidence}</option>
+                <option value="inverted">${translations[currentLanguage].methods.inverted}</option>
+                <option value="tfidf">${translations[currentLanguage].methods.tfidf}</option>
+            `;
+
+        // تحديث نص زر تبديل اللغة
+        languageSwitcher.innerHTML = `<i class="fas fa-language"></i> ${translations[currentLanguage].language}`;
+
+        // إعادة تهيئة بيانات البحث للغة الجديدة
+        searchData = initializeSearchData();
+
+        // إعادة تنفيذ البحث إذا كان هناك بحث سابق
+        if (currentQuery || currentMethod) {
+          performSearch();
+        } else {
+          displayResults(destinations);
+        }
+      }
+
+      // تهيئة الصفحة
+      document.addEventListener("DOMContentLoaded", () => {
+        // عرض جميع الوجهات عند التحميل
+        displayResults(destinations);
+
+        // أحداث البحث
+        searchBtn.addEventListener("click", performSearch);
+        searchInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            performSearch();
+          }
+        });
+
+        // حدث تبديل اللغة
+        languageSwitcher.addEventListener("click", switchLanguage);
+
+        // تحديث السنة الحالية
+        currentYear.textContent = new Date().getFullYear();
+      });
+    </script>
+  </body>
+</html>
