@@ -16,13 +16,10 @@ The project aims to provide a simple and elegant way to search for tourist desti
 - 📱 Responsive design compatible with all screen sizes.
 - 🎨 Interface design using only HTML and CSS (No Bootstrap or JavaScript).
 
-## 📸 Demo
+### 🌐 Live Website:
 
-### 🔽 Page Preview:
-
-![Screenshot of the UI](./assets/demo.png)
-
-> Make sure to place this image inside an `assets` folder.
+Explore the project live here:  
+🔗 [https://mustafa-ashraf2003.github.io/Tourism-Search-Engine/](https://mustafa-ashraf2003.github.io/Tourism-Search-Engine/)
 
 ## 🛠️ Technologies Used
 
